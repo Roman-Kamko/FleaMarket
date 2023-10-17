@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+
+  postgres:
+    container_name: flea_market_db
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
+
+  backend:
+    image: backend:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres/postgres

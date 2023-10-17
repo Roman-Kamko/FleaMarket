@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: ${db.url:jdbc:postgresql://localhost:5433/postgres}
+    username: ${db.username:postgres}
+    password: ${db.password:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    properties.hibernate:
+      show_sql: true
+      format_sql: true
+    hibernate:
+      ddl-auto: update
+  mvc.format.date-time: iso
+  liquibase.enabled: false
