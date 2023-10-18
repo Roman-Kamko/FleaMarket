@@ -1,8 +1,8 @@
 package com.team2.flea_market.controller;
 
 
-import com.team2.flea_market.dto.Login;
-import com.team2.flea_market.dto.Register;
+import com.team2.flea_market.dto.auth.LoginDto;
+import com.team2.flea_market.dto.auth.RegisterDto;
 import com.team2.flea_market.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Login login) {
+    public ResponseEntity<?> login(@RequestBody LoginDto login) {
         if (authService.login(login.username(), login.password())) {
             return ResponseEntity.ok().build();
         } else {
@@ -31,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Register register) {
+    public ResponseEntity<?> register(@RequestBody RegisterDto register) {
         if (authService.register(register)) {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
