@@ -4,10 +4,17 @@ package com.team2.flea_market.controller;
 import com.team2.flea_market.dto.auth.LoginDto;
 import com.team2.flea_market.dto.auth.RegisterDto;
 import com.team2.flea_market.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,8 +28,16 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @Tag(name = "Авторизация")
+    @Operation(summary = "Авторизация пользователя")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {
+                    @Content(schema = @Schema(hidden = true))}),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = {
+                    @Content(schema = @Schema(hidden = true))})
+    })
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDto login) {
+    public ResponseEntity<?> login(@RequestBody @Validated LoginDto login) {
         if (authService.login(login.username(), login.password())) {
             return ResponseEntity.ok().build();
         } else {
@@ -30,12 +45,21 @@ public class AuthController {
         }
     }
 
+    @Tag(name = "Регистрация")
+    @Operation(summary = "Регистрация пользователя")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created", content = {
+                    @Content(schema = @Schema(hidden = true))}),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                    @Content(schema = @Schema(hidden = true))})
+    })
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterDto register) {
+    public ResponseEntity<?> register(@RequestBody @Validated RegisterDto register) {
         if (authService.register(register)) {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
 }
