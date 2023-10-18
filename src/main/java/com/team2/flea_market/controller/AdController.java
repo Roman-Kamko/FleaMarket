@@ -23,9 +23,9 @@ import java.util.Collections;
 
 @RestController
 @RequestMapping("/ads")
+@Tag(name = "Объявления")
 public class AdController {
 
-    @Tag(name = "Объявления")
     @Operation(summary = "Получение всех объявлений")
     @ApiResponse(responseCode = "200", description = "OK", content = {
             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema =
@@ -35,7 +35,6 @@ public class AdController {
         return ResponseEntity.ok(new AdsDto(0, Collections.emptyList()));
     }
 
-    @Tag(name = "Объявления")
     @Operation(summary = "Добавление объявления")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created", content = {
@@ -50,7 +49,6 @@ public class AdController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new AdDto(1, "", 1, 1, ""));
     }
 
-    @Tag(name = "Объявления")
     @Operation(summary = "Добавление объявления")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
@@ -66,12 +64,10 @@ public class AdController {
         return ResponseEntity.ok(new ExtendedAdDto(1, "", "", "", "", "", "", 1, ""));
     }
 
-    @Tag(name = "Объявления")
     @Operation(summary = "Удаление объявления")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "No content", content = {
-                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema =
-                    @Schema(implementation = ExtendedAdDto.class))}),
+                    @Content(schema = @Schema(hidden = true))}),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = {
                     @Content(schema = @Schema(hidden = true))}),
             @ApiResponse(responseCode = "403", description = "Forbidden", content = {
@@ -84,7 +80,6 @@ public class AdController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @Tag(name = "Объявления")
     @Operation(summary = "Обновление информации об объявлении")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
@@ -103,7 +98,6 @@ public class AdController {
         return ResponseEntity.ok(new AdDto(1, "", 1, 1, ""));
     }
 
-    @Tag(name = "Объявления")
     @Operation(summary = "Обновление информации об объявлении")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
@@ -117,7 +111,6 @@ public class AdController {
         return ResponseEntity.ok(new AdsDto(0, Collections.emptyList()));
     }
 
-    @Tag(name = "Объявления")
     @Operation(summary = "Обновление картинки объявления")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
