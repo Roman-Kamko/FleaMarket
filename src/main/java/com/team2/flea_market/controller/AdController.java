@@ -15,10 +15,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.Collections;
 
 @RestController
@@ -43,9 +43,9 @@ public class AdController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = {
                     @Content(schema = @Schema(hidden = true))})
     })
-    @PostMapping
-    public ResponseEntity<AdDto> createAd(@RequestPart(value = "dto") @Validated CreateOrUpdateAdDto createOrUpdateAdDto,
-                                          @RequestPart(value = "file") MultipartFile image) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<AdDto> createAd(@RequestPart(value = "properties") @Valid CreateOrUpdateAdDto createOrUpdateAdDto,
+                                          @RequestPart(value = "image") MultipartFile image) {
         return ResponseEntity.status(HttpStatus.CREATED).body(new AdDto(1, "", 1, 1, ""));
     }
 
@@ -94,7 +94,7 @@ public class AdController {
     })
     @PatchMapping("/{id}")
     public ResponseEntity<AdDto> updateAd(@PathVariable @Parameter(description = "id объявления") Integer id,
-                                          @RequestBody @Validated CreateOrUpdateAdDto createOrUpdateAdDto) {
+                                          @RequestBody @Valid CreateOrUpdateAdDto createOrUpdateAdDto) {
         return ResponseEntity.ok(new AdDto(1, "", 1, 1, ""));
     }
 
@@ -123,13 +123,9 @@ public class AdController {
             @ApiResponse(responseCode = "404", description = "Not found", content = {
                     @Content(schema = @Schema(hidden = true))})
     })
-    /*
-    * Для чего тут OCTET_STREAM? зачем иметь возможность загрузить картинку которую ты сам же подал для
-    * изменения изображения у объявления?
-    * */
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> updateAdImage(@PathVariable @Parameter(description = "id объявления") Integer id,
-                                                @RequestBody MultipartFile image) {
+                                                @RequestPart MultipartFile image) {
         return ResponseEntity.ok(new byte[]{});
     }
 
