@@ -13,9 +13,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 
 @RestController
@@ -50,8 +50,8 @@ public class CommentController {
     })
     @PostMapping("/{id}/comments")
     public ResponseEntity<CommentDto> createComment(@PathVariable @Parameter(description = "id объявления") Integer id,
-                                                    @RequestBody @Validated CreateOrUpdateCommentDto createOrUpdateCommentDto) {
-        return ResponseEntity.ok(new CommentDto(1, "", "", 1, 1, ""));
+                                                    @RequestBody @Valid CreateOrUpdateCommentDto createOrUpdateCommentDto) {
+        return ResponseEntity.ok(new CommentDto(1, "", "", 1L, 1, ""));
     }
 
     @Operation(summary = "Удаление комментария")
@@ -86,8 +86,8 @@ public class CommentController {
     @PatchMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<CommentDto> updateComment(@PathVariable @Parameter(description = "id объявления") Integer adId,
                                                     @PathVariable @Parameter(description = "id комментария") Integer commentId,
-                                                    @RequestBody @Validated CreateOrUpdateCommentDto createOrUpdateCommentDto) {
-        return ResponseEntity.ok(new CommentDto(1, "", "", 1, 1, ""));
+                                                    @RequestBody @Valid CreateOrUpdateCommentDto createOrUpdateCommentDto) {
+        return ResponseEntity.ok(new CommentDto(1, "", "", 1L, 1, ""));
     }
 
 }

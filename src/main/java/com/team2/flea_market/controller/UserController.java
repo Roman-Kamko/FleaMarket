@@ -16,6 +16,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/users")
 @Tag(name = "Пользователи")
@@ -31,7 +33,7 @@ public class UserController {
                     @Content(schema = @Schema(hidden = true))})
     })
     @PostMapping("/set_password")
-    public ResponseEntity<?> setPassword(@RequestBody @Validated NewPasswordDto newPassword) {
+    public ResponseEntity<?> setPassword(@RequestBody @Valid NewPasswordDto newPassword) {
         return ResponseEntity.ok().build();
     }
 
@@ -69,7 +71,7 @@ public class UserController {
                     @Content(schema = @Schema(hidden = true))})
     })
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateImage(@RequestBody MultipartFile image) {
+    public ResponseEntity<?> updateImage(@RequestPart MultipartFile image) {
         return ResponseEntity.ok().build();
     }
 

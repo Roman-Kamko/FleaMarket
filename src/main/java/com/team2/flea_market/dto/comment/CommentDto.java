@@ -10,7 +10,7 @@ public record CommentDto(
         @Schema(description = "Имя создателя комментария")
         String authorFirstName,
         @Schema(description = "дата и время создания комментария в миллисекундах с 00:00:00 01.01.1970")
-        Integer createdAt,
+        Long createdAt,
         @Schema(description = "id комментария")
         Integer pk,
         @Schema(description = "текст комментария")
