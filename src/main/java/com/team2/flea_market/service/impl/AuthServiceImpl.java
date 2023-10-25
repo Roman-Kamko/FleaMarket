@@ -1,6 +1,6 @@
 package com.team2.flea_market.service.impl;
 
-import com.team2.flea_market.dto.Register;
+import com.team2.flea_market.dto.auth.RegisterDto;
 import com.team2.flea_market.service.AuthService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean register(Register register) {
+    public boolean register(RegisterDto register) {
         if (manager.userExists(register.username())) {
             return false;
         }

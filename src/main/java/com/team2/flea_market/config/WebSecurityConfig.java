@@ -1,6 +1,6 @@
 package com.team2.flea_market.config;
 
-import com.team2.flea_market.dto.Role;
+import com.team2.flea_market.dto.user.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
