@@ -1,13 +1,18 @@
 package com.team2.flea_market.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
+@ToString(exclude = "comment")
+@EqualsAndHashCode(exclude = "comment")
 @Table(name = "ad")
 public class Ad {
 
@@ -32,6 +37,6 @@ public class Ad {
     private User user;
 
     @OneToMany(mappedBy = "comment")
-    private Comment comment;
+    private List<Comment> comment;
 
 }
