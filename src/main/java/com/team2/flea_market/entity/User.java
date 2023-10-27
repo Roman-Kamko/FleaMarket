@@ -12,8 +12,8 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-@ToString(exclude = "ads")
-@EqualsAndHashCode(exclude = "ads")
+@ToString(exclude = {"ads", "comments"})
+@EqualsAndHashCode(exclude = {"ads", "comments"})
 @Table(name = "users")
 public class User {
 
@@ -45,5 +45,8 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Ad> ads;
+
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments;
 
 }
