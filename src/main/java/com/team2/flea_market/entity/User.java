@@ -1,17 +1,16 @@
 package com.team2.flea_market.entity;
 
 import com.team2.flea_market.dto.user.Role;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Builder
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString(exclude = {"ads", "comments"})
 @EqualsAndHashCode(exclude = {"ads", "comments"})
 @Table(name = "users")
@@ -27,10 +26,10 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
     @Column(name = "phone", nullable = false)
