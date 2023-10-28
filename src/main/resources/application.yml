@@ -10,6 +10,7 @@ spring:
       show_sql: true
       format_sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
   mvc.format.date-time: iso
-  liquibase.enabled: false
+  liquibase:
+    change-log: liquibase/db.changelog-master.yml
