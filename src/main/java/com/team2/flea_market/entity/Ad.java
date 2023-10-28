@@ -36,7 +36,7 @@ public class Ad {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "ad")
     private List<Comment> comment;
 
 }
