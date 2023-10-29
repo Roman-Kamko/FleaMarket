@@ -2,6 +2,7 @@ package com.team2.flea_market.mapper;
 
 import com.team2.flea_market.dto.ad.AdDto;
 import com.team2.flea_market.dto.ad.CreateOrUpdateAdDto;
+import com.team2.flea_market.dto.ad.ExtendedAdDto;
 import com.team2.flea_market.entity.Ad;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,14 +15,12 @@ import org.springframework.stereotype.Component;
 public interface AdMapper {
 
     /**
-     * Используй для маппинг в {@link Ad}
+     * Используй для маппинг в {@link Ad} при создании
      *
-     * @param adDto {@link AdDto}
+     * @param adDtoIn {@link AdDto}
      * @return {@link Ad}
      */
-    @Mapping(target = "id", source = "pk")
-    @Mapping(target = "user.id", source = "author")
-    Ad toEntity(AdDto adDto);
+    Ad toEntity(CreateOrUpdateAdDto adDtoIn);
 
     /**
      * Используй для маппинга при апдейте в {@link Ad}
@@ -30,7 +29,7 @@ public interface AdMapper {
      * @param ad    {@link Ad}
      * @return {@link Ad}
      */
-    Ad createOrUpdateAd(CreateOrUpdateAdDto adDto, @MappingTarget Ad ad);
+    Ad toUpdateAd(CreateOrUpdateAdDto adDto, @MappingTarget Ad ad);
 
     /**
      * Используй для маппинга в {@link AdDto}
@@ -41,4 +40,18 @@ public interface AdMapper {
     @Mapping(target = "pk", source = "id")
     @Mapping(target = "author", source = "user.id")
     AdDto toDto(Ad ad);
+
+    /**
+     * Используй для маппинга в {@link ExtendedAdDto}
+     *
+     * @param ad {@link Ad}
+     * @return {@link ExtendedAdDto}
+     */
+    @Mapping(target = "pk", source = "id")
+    @Mapping(target = "authorFirstName", source = "user.firstName")
+    @Mapping(target = "authorLastName", source = "user.lastName")
+    @Mapping(target = "email", source = "user.email")
+    @Mapping(target = "phone", source = "user.phone")
+    @Mapping(target = "image", source="image")
+    ExtendedAdDto toExtendedAdDto(Ad ad);
 }
