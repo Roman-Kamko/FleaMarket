@@ -12,19 +12,20 @@ class CommentMapperTest {
 
     private final CommentMapper commentMapper = new CommentMapperImpl();
 
-    private final Comment comment = prepearNewComment();
-
+    private final Comment comment = prepearComment();
+    private final Comment newComment = prepearNewComment();
     private final CommentDto commentDto = prepearCommentDto();
+    private final CreateOrUpdateCommentDto createOrUpdateCommentDto = new CreateOrUpdateCommentDto("New_Text");
 
     @Test
     void toEntity() {
-        assertThat(commentMapper.toEntity(commentDto)).isEqualTo(comment);
+        assertThat(commentMapper.toEntity(createOrUpdateCommentDto)).isEqualTo(newComment);
+        System.out.println(commentMapper.toEntity(createOrUpdateCommentDto));
     }
 
     @Test
     void toUpdatedOrCreateComment() {
-        CreateOrUpdateCommentDto createOrUpdateCommentDto = new CreateOrUpdateCommentDto("New_Text");
-        assertThat(commentMapper.toUpdatedOrCreateComment(createOrUpdateCommentDto, comment).getText()).isEqualTo("New_Text");
+        assertThat(commentMapper.toUpdatedComment(createOrUpdateCommentDto, comment).getText()).isEqualTo("New_Text");
     }
 
     @Test
@@ -32,7 +33,7 @@ class CommentMapperTest {
         assertThat(commentMapper.toDto(comment)).isEqualTo(commentDto);
     }
 
-    private Comment prepearNewComment() {
+    private Comment prepearComment() {
         return Comment.builder()
                 .id(1)
                 .text("comment")
@@ -48,6 +49,16 @@ class CommentMapperTest {
                         .ads(null)
                         .comments(null)
                         .build())
+                .ad(null)
+                .build();
+    }
+
+    private Comment prepearNewComment() {
+        return Comment.builder()
+                .id(null)
+                .text("New_Text")
+                .createdAt(null)
+                .user(null)
                 .ad(null)
                 .build();
     }

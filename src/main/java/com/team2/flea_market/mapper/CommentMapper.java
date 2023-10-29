@@ -14,16 +14,12 @@ import org.springframework.stereotype.Component;
 public interface CommentMapper {
 
     /**
-     * Используй для маппинг в {@link Comment}
+     * Используй для маппинг в {@link Comment} при создании
      *
-     * @param commentDto {@link CommentDto}
+     * @param commentDtoIn {@link CreateOrUpdateCommentDto}
      * @return {@link Comment}
      */
-    @Mapping(target = "id", source = "pk")
-    @Mapping(target = "user.id", source = "author")
-    @Mapping(target = "user.firstName", source = "authorFirstName")
-    @Mapping(target = "user.image", source = "authorImage")
-    Comment toEntity(CommentDto commentDto);
+    Comment toEntity(CreateOrUpdateCommentDto commentDtoIn);
 
     /**
      * Используй для маппинг в {@link Comment} при апдейте
@@ -32,7 +28,7 @@ public interface CommentMapper {
      * @param comment {@link Comment}
      * @return {@link Comment}
      */
-    Comment toUpdatedOrCreateComment(CreateOrUpdateCommentDto updateCommentDto, @MappingTarget Comment comment);
+    Comment toUpdatedComment(CreateOrUpdateCommentDto updateCommentDto, @MappingTarget Comment comment);
 
     /**
      * Используй для маппинг в {@link CommentDto}
