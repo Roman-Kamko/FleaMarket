@@ -1,13 +1,17 @@
 package com.team2.flea_market.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@Builder
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "comment")
 public class Comment {
 
