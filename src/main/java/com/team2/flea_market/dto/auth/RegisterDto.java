@@ -1,13 +1,14 @@
 package com.team2.flea_market.dto.auth;
 
-import com.sun.istack.NotNull;
 import com.team2.flea_market.dto.user.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+@Builder
 @Schema(name = "Register")
 public record RegisterDto(
         @NotBlank
@@ -30,7 +31,7 @@ public record RegisterDto(
         @Pattern(regexp = "\\+7\\s?\\(?\\d{3}\\)?\\s?\\d{3}-?\\d{2}-?\\d{2}", message = "некорректный ввод телефона: ${validatedValue}")
         @Schema(description = "телефон пользователя", pattern = "\\+7\\s?\\(?\\d{3}\\)?\\s?\\d{3}-?\\d{2}-?\\d{2}", example = "+7(911)119-23-32")
         String phone,
-        @NotNull
+
         Role role
 ) {
 }

@@ -1,7 +1,9 @@
 package com.team2.flea_market.dto.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 
+@Builder
 @Schema(name = "User")
 public record UserDto(
         @Schema(description = "id пользователя")

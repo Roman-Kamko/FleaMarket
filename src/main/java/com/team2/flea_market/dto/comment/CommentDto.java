@@ -1,7 +1,9 @@
 package com.team2.flea_market.dto.comment;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 
+@Builder
 public record CommentDto(
         @Schema(description = "id автора объявления")
         Integer author,
