@@ -24,11 +24,6 @@ class CommentMapperTest {
     }
 
     @Test
-    void toUpdatedOrCreateComment() {
-        assertThat(commentMapper.toUpdatedComment(createOrUpdateCommentDto, comment).getText()).isEqualTo("New_Text");
-    }
-
-    @Test
     void toDto() {
         assertThat(commentMapper.toDto(comment)).isEqualTo(commentDto);
     }

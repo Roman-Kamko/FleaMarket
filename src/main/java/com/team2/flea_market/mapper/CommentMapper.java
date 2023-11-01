@@ -26,9 +26,8 @@ public interface CommentMapper {
      *
      * @param updateCommentDto {@link CreateOrUpdateCommentDto}
      * @param comment {@link Comment}
-     * @return {@link Comment}
      */
-    Comment toUpdatedComment(CreateOrUpdateCommentDto updateCommentDto, @MappingTarget Comment comment);
+    void toUpdatedComment(CreateOrUpdateCommentDto updateCommentDto, @MappingTarget Comment comment);
 
     /**
      * Используй для маппинг в {@link CommentDto}

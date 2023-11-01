@@ -27,9 +27,8 @@ public interface AdMapper {
      *
      * @param adDto {@link CreateOrUpdateAdDto}
      * @param ad    {@link Ad}
-     * @return {@link Ad}
      */
-    Ad toUpdateAd(CreateOrUpdateAdDto adDto, @MappingTarget Ad ad);
+    void toUpdateAd(CreateOrUpdateAdDto adDto, @MappingTarget Ad ad);
 
     /**
      * Используй для маппинга в {@link AdDto}
@@ -50,8 +49,5 @@ public interface AdMapper {
     @Mapping(target = "pk", source = "id")
     @Mapping(target = "authorFirstName", source = "user.firstName")
     @Mapping(target = "authorLastName", source = "user.lastName")
-    @Mapping(target = "email", source = "user.email")
-    @Mapping(target = "phone", source = "user.phone")
-    @Mapping(target = "image", source="image")
     ExtendedAdDto toExtendedAdDto(Ad ad);
 }
