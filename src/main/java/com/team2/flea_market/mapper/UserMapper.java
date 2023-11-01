@@ -27,9 +27,8 @@ public interface UserMapper {
      * у пользователя
      * @param updateUserDto {@link UpdateUserDto}
      * @param user {@link User} к которому нужно применить изменения
-     * @return {@link User}
      */
-    User toUpdatedEntity(UpdateUserDto updateUserDto, @MappingTarget User user);
+    void toUpdatedEntity(UpdateUserDto updateUserDto, @MappingTarget User user);
 
     /**
      * Используй для маппинга в {@link UserDto} при передаче данных пользователя клиенту

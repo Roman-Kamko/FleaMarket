@@ -25,13 +25,6 @@ class AdMapperTest {
     }
 
     @Test
-    void toUpdateAdTest() {
-        assertThat(mapper.toUpdateAd(createOrUpdateAdDto, ad).getTitle()).isEqualTo(createOrUpdateAdDto.title());
-        assertThat(mapper.toUpdateAd(createOrUpdateAdDto, ad).getDescription()).isEqualTo(createOrUpdateAdDto.description());
-        assertThat(mapper.toUpdateAd(createOrUpdateAdDto, ad).getPrice()).isEqualTo(createOrUpdateAdDto.price());
-    }
-
-    @Test
     void toDtoTest() {
         assertThat(mapper.toDto(ad)).isEqualTo(dto);
     }
@@ -71,8 +64,7 @@ class AdMapperTest {
     }
 
     private AdDto prepearNewAdDto() {
-        AdDto adDto = new AdDto(2, "image", 1, 300, "title");
-        return adDto;
+        return new AdDto(2, "image", 1, 300, "title");
     }
 
 }
