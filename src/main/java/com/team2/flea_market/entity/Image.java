@@ -15,8 +15,10 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "size")
     private Long size;
 
+    @Column(name = "media_type")
     private String mediaType;
 
     @Lob
