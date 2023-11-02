@@ -39,13 +39,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(name = "image")
-    private String image;
-
     @OneToMany(mappedBy = "user")
     private List<Ad> ads;
 
     @OneToMany(mappedBy = "user")
     private List<Comment> comments;
+
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
 
 }

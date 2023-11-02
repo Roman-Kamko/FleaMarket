@@ -4,10 +4,8 @@ import com.team2.flea_market.dto.ad.AdDto;
 import com.team2.flea_market.dto.ad.CreateOrUpdateAdDto;
 import com.team2.flea_market.dto.ad.ExtendedAdDto;
 import com.team2.flea_market.entity.Ad;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.MappingTarget;
+import com.team2.flea_market.entity.Image;
+import org.mapstruct.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -38,6 +36,7 @@ public interface AdMapper {
      */
     @Mapping(target = "pk", source = "id")
     @Mapping(target = "author", source = "user.id")
+    @Mapping(target = "image", source = "image", qualifiedByName = "imageMapping")
     AdDto toDto(Ad ad);
 
     /**
@@ -49,5 +48,15 @@ public interface AdMapper {
     @Mapping(target = "pk", source = "id")
     @Mapping(target = "authorFirstName", source = "user.firstName")
     @Mapping(target = "authorLastName", source = "user.lastName")
+    @Mapping(target = "image", source = "image", qualifiedByName = "imageMapping")
     ExtendedAdDto toExtendedAdDto(Ad ad);
+
+    @Named("imageMapping")
+    default String imageMapping(Image image) {
+        if (image == null) {
+            return null;
+        }
+        return "users/image/" + image.getId();
+    }
+
 }
