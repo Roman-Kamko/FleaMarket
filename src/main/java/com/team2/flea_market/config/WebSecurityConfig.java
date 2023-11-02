@@ -1,6 +1,7 @@
 package com.team2.flea_market.config;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @AllArgsConstructor
 public class WebSecurityConfig {
 
+    @Autowired
     private UserDetailsService userDetailsService;
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",

@@ -3,10 +3,8 @@ package com.team2.flea_market.mapper;
 import com.team2.flea_market.dto.comment.CommentDto;
 import com.team2.flea_market.dto.comment.CreateOrUpdateCommentDto;
 import com.team2.flea_market.entity.Comment;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.MappingTarget;
+import com.team2.flea_market.entity.Image;
+import org.mapstruct.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -38,8 +36,17 @@ public interface CommentMapper {
     @Mapping(target = "pk", source = "id")
     @Mapping(target = "author", source = "user.id")
     @Mapping(target = "authorFirstName", source = "user.firstName")
-    @Mapping(target = "authorImage", source = "user.image")
+    @Mapping(target = "authorImage", source = "user.image", qualifiedByName = "imageMapping")
     CommentDto toDto(Comment comment);
+
+    @Named("imageMapping")
+    default String imageMapping(Image image) {
+        if (image == null) {
+            return null;
+        }
+        return "users/image/" + image.getId();
+    }
+
 }
 
 

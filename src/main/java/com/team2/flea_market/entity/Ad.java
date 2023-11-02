@@ -29,14 +29,15 @@ public class Ad {
     @Column(name = "price", nullable = false)
     private Integer price;
 
-    @Column(name = "image")
-    private String image;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "ad")
     private List<Comment> comment;
+
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
 
 }
