@@ -1,46 +1,43 @@
 package com.team2.flea_market.service.impl;
 
 import com.team2.flea_market.dto.auth.RegisterDto;
+import com.team2.flea_market.entity.User;
+import com.team2.flea_market.exception.UserAlreadyRegisterException;
+import com.team2.flea_market.exception.UserNotFoundException;
+import com.team2.flea_market.mapper.UserMapper;
+import com.team2.flea_market.repository.UserRepository;
 import com.team2.flea_market.service.AuthService;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    private final UserDetailsManager manager;
     private final PasswordEncoder encoder;
-
-    public AuthServiceImpl(UserDetailsManager manager,
-                           PasswordEncoder passwordEncoder) {
-        this.manager = manager;
-        this.encoder = passwordEncoder;
-    }
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public boolean login(String userName, String password) {
-        if (!manager.userExists(userName)) {
-            return false;
+        if (!userRepository.existsByEmail(userName)) {
+            throw new UserNotFoundException(userName);
         }
-        UserDetails userDetails = manager.loadUserByUsername(userName);
-        return encoder.matches(password, userDetails.getPassword());
+        User user = userRepository.findByEmail(userName).orElseThrow(() -> new UsernameNotFoundException(""));
+        return encoder.matches(password, user.getPassword());
     }
 
     @Override
     public boolean register(RegisterDto register) {
-        if (manager.userExists(register.username())) {
-            return false;
+        String username = register.username();
+        if (userRepository.existsByEmail(username)) {
+            throw new UserAlreadyRegisterException(username);
         }
-        manager.createUser(
-                User.builder()
-                        .passwordEncoder(this.encoder::encode)
-                        .password(register.password())
-                        .username(register.username())
-                        .roles(register.role().name())
-                        .build());
+        User user = userMapper.toEntity(register);
+        user.setPassword(encoder.encode(register.password()));
+        userRepository.save(user);
         return true;
     }
 
