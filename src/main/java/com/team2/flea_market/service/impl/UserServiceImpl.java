@@ -3,11 +3,13 @@ package com.team2.flea_market.service.impl;
 import com.team2.flea_market.dto.auth.NewPasswordDto;
 import com.team2.flea_market.dto.user.UpdateUserDto;
 import com.team2.flea_market.dto.user.UserDto;
+import com.team2.flea_market.entity.Image;
 import com.team2.flea_market.entity.User;
 import com.team2.flea_market.exception.PasswordChangeException;
 import com.team2.flea_market.exception.UserNotFoundException;
 import com.team2.flea_market.mapper.UserMapper;
 import com.team2.flea_market.repository.UserRepository;
+import com.team2.flea_market.service.ImageService;
 import com.team2.flea_market.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder encoder;
+    private final ImageService imageService;
 
     @Override
     @Transactional
@@ -57,10 +60,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateImage(MultipartFile image) {
-
+    @Transactional
+    public void updateImage(MultipartFile imageFile) {
+        User currentUser = getCurrentUser();
+        Image currentOrNewImage = imageService.uploadImage(imageFile, currentUser.getImage());
+        currentUser.setImage(currentOrNewImage);
+        log.info("пользователь \"{}\" установил новый аватар, ID аватара {}",
+                currentUser.getEmail(), currentOrNewImage.getId());
     }
 
+    @Override
+    public Image getImage(Integer id) {
+        return getCurrentUser().getImage();
+    }
+
+    /**
+     * Получение текущего пользователя
+     * @return текущий пользователь
+     */
     private User getCurrentUser() {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(currentUsername)

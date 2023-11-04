@@ -3,6 +3,7 @@ package com.team2.flea_market.controller;
 import com.team2.flea_market.dto.auth.NewPasswordDto;
 import com.team2.flea_market.dto.user.UpdateUserDto;
 import com.team2.flea_market.dto.user.UserDto;
+import com.team2.flea_market.entity.Image;
 import com.team2.flea_market.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -78,7 +79,14 @@ public class UserController {
     })
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateImage(@RequestPart MultipartFile image) {
+        userService.updateImage(image);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/me/image/{id}", produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<byte[]> getImageById(@PathVariable("id") int id) {
+        Image image = userService.getImage(id);
+        return ResponseEntity.ok().contentType(MediaType.valueOf(image.getMediaType())).contentLength(image.getSize()).body(image.getContent());
     }
 
 }
