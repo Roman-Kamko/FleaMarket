@@ -3,6 +3,7 @@ package com.team2.flea_market.service;
 import com.team2.flea_market.dto.auth.NewPasswordDto;
 import com.team2.flea_market.dto.user.UpdateUserDto;
 import com.team2.flea_market.dto.user.UserDto;
+import com.team2.flea_market.entity.Image;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
@@ -14,5 +15,7 @@ public interface UserService {
     UpdateUserDto update(UpdateUserDto updateUserDto);
 
     void updateImage(MultipartFile image);
+
+    Image getImage(Integer id);
 
 }

@@ -40,7 +40,7 @@ class CommentMapperTest {
                         .lastName(null)
                         .phone(null)
                         .role(null)
-                        .image("image")
+                        .image(null)
                         .ads(null)
                         .comments(null)
                         .build())

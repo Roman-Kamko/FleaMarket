@@ -40,7 +40,7 @@ class AdMapperTest {
         ad.setTitle("title");
         ad.setDescription("desc");
         ad.setComment(null);
-        ad.setImage("image");
+        ad.setImage(null);
         ad.setPrice(300);
         ad.setUser(User.builder().id(2)
                 .firstName("f")
