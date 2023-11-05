@@ -6,14 +6,13 @@ import com.team2.flea_market.dto.user.UserDto;
 import com.team2.flea_market.entity.Image;
 import com.team2.flea_market.entity.User;
 import com.team2.flea_market.exception.PasswordChangeException;
-import com.team2.flea_market.exception.UserNotFoundException;
 import com.team2.flea_market.mapper.UserMapper;
 import com.team2.flea_market.repository.UserRepository;
 import com.team2.flea_market.service.ImageService;
+import com.team2.flea_market.service.SecurityService;
 import com.team2.flea_market.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,11 +28,12 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder encoder;
     private final ImageService imageService;
+    private final SecurityService securityService;
 
     @Override
     @Transactional
     public void setPassword(NewPasswordDto newPasswordDto) {
-        User user = getCurrentUser();
+        User user = securityService.getCurrentUser();
         String username = user.getEmail();
         if (encoder.matches(newPasswordDto.currentPassword(), user.getPassword())) {
             user.setPassword(encoder.encode(newPasswordDto.newPassword()));
@@ -46,13 +46,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getInfo() {
-        return userMapper.toDto(getCurrentUser());
+        return userMapper.toDto(securityService.getCurrentUser());
     }
 
     @Override
     @Transactional
     public UpdateUserDto update(UpdateUserDto updateUserDto) {
-        User user = getCurrentUser();
+        User user = securityService.getCurrentUser();
         userMapper.toUpdatedEntity(updateUserDto, user);
         userRepository.save(user);
         log.info("пользователь \"{}\" обновил данные", user.getEmail());
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateImage(MultipartFile imageFile) {
-        User currentUser = getCurrentUser();
+        User currentUser = securityService.getCurrentUser();
         Image currentOrNewImage = imageService.uploadImage(imageFile, currentUser.getImage());
         currentUser.setImage(currentOrNewImage);
         log.info("пользователь \"{}\" установил новый аватар, ID аватара {}",
@@ -71,17 +71,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Image getImage(Integer id) {
-        return getCurrentUser().getImage();
-    }
-
-    /**
-     * Получение текущего пользователя
-     * @return текущий пользователь
-     */
-    private User getCurrentUser() {
-        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByEmail(currentUsername)
-                .orElseThrow(() -> new UserNotFoundException(currentUsername));
+        return securityService.getCurrentUser().getImage();
     }
 
 }

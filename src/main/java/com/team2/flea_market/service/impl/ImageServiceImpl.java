@@ -20,16 +20,17 @@ public class ImageServiceImpl implements ImageService {
     @SneakyThrows
     @Transactional
     public Image uploadImage(MultipartFile file, Image image) {
-        Image currentOrNewImage = getImage(image.getId());
+        Image currentOrNewImage;
+        if (image == null) {
+            currentOrNewImage = new Image();
+        } else {
+            currentOrNewImage = imageRepository.findById(image.getId()).orElseThrow();
+        }
         currentOrNewImage.setSize(file.getSize());
         currentOrNewImage.setMediaType(file.getContentType());
         currentOrNewImage.setContent(file.getBytes());
         imageRepository.saveAndFlush(currentOrNewImage);
         return currentOrNewImage;
-    }
-
-    private Image getImage(Integer imageId) {
-        return imageRepository.findById(imageId).orElse(new Image());
     }
 
 }
