@@ -6,6 +6,7 @@ import com.team2.flea_market.dto.user.UserDto;
 import com.team2.flea_market.entity.Image;
 import com.team2.flea_market.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -83,10 +84,21 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Получить аватар пользователя")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {
+                    @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, array =
+                    @ArraySchema(schema = @Schema(type = "string", format = "byte")))}),
+            @ApiResponse(responseCode = "404", description = "Not found", content = {
+                    @Content(schema = @Schema(hidden = true))})
+    })
     @GetMapping(value = "/me/image/{id}", produces = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<byte[]> getImageById(@PathVariable("id") int id) {
         Image image = userService.getImage(id);
-        return ResponseEntity.ok().contentType(MediaType.valueOf(image.getMediaType())).contentLength(image.getSize()).body(image.getContent());
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(image.getMediaType()))
+                .contentLength(image.getSize())
+                .body(image.getContent());
     }
 
 }
