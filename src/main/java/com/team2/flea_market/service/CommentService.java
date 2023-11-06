@@ -8,7 +8,7 @@ public interface CommentService {
 
     CommentsDto findAllAdComments(Integer id);
 
-    CommentDto createComment(Integer id);
+    CommentDto createComment(Integer id,CreateOrUpdateCommentDto createOrUpdateCommentDto);
 
     void deleteAdComment(Integer adId, Integer commentId);
 
