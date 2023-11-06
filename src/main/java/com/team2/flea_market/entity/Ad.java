@@ -33,10 +33,10 @@ public class Ad {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "ad")
+    @OneToMany(mappedBy = "ad", cascade = CascadeType.REMOVE)
     private List<Comment> comment;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "image_id")
     private Image image;
 

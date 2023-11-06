@@ -11,6 +11,7 @@ import com.team2.flea_market.exception.AdNotFoundException;
 import com.team2.flea_market.exception.EntityConversionException;
 import com.team2.flea_market.mapper.AdMapper;
 import com.team2.flea_market.repository.AdRepository;
+import com.team2.flea_market.security.SecurityPermission;
 import com.team2.flea_market.service.AdService;
 import com.team2.flea_market.service.ImageService;
 import com.team2.flea_market.service.SecurityService;
@@ -71,6 +72,7 @@ public class AdServiceImpl implements AdService {
     @Override
     @Transactional
     public void deleteAd(Integer adId) {
+        verifyAdPermission(adId);
         Ad ad = adRepository.findById(adId)
                 .orElseThrow(() -> new AdNotFoundException(adId));
         adRepository.delete(ad);
@@ -79,6 +81,7 @@ public class AdServiceImpl implements AdService {
     @Override
     @Transactional
     public AdDto updateAd(Integer adId, CreateOrUpdateAdDto createOrUpdateAdDto) {
+        verifyAdPermission(adId);
         return adRepository.findById(adId)
                 .map(ad -> {
                     adMapper.toUpdateAd(createOrUpdateAdDto, ad);
@@ -100,6 +103,7 @@ public class AdServiceImpl implements AdService {
     @Override
     @Transactional
     public Image updateAdImage(Integer adId, MultipartFile image) {
+        verifyAdPermission(adId);
         return adRepository.findById(adId)
                 .map(ad -> imageService.uploadImage(image, ad.getImage()))
                 .orElseThrow(() -> new AdNotFoundException(adId));
@@ -110,6 +114,13 @@ public class AdServiceImpl implements AdService {
         return adRepository.findById(adId)
                 .map(Ad::getImage)
                 .orElseThrow(() -> new AdNotFoundException(adId));
+    }
+
+    private void verifyAdPermission(Integer adId) {
+        User currentUser = securityService.getCurrentUser();
+        Ad currentAd = adRepository.findById(adId)
+                .orElseThrow(() -> new AdNotFoundException(adId));
+        SecurityPermission.verifyAdPermissions(currentAd, currentUser);
     }
 
 }

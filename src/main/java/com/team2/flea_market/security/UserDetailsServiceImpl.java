@@ -3,15 +3,12 @@ package com.team2.flea_market.security;
 import com.team2.flea_market.entity.User;
 import com.team2.flea_market.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Primary
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
