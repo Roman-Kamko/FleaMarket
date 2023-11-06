@@ -56,7 +56,7 @@ public class CommentController {
     @PostMapping("/{id}/comments")
     public ResponseEntity<CommentDto> createComment(@PathVariable @Parameter(description = "id объявления") Integer id,
                                                     @RequestBody @Valid CreateOrUpdateCommentDto createOrUpdateCommentDto) {
-        return ResponseEntity.ok(new CommentDto(1, "", "", 1L, 1, ""));
+        return ResponseEntity.ok(commentService.createComment(id, createOrUpdateCommentDto));
     }
 
     @Operation(summary = "Удаление комментария")

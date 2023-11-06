@@ -6,6 +6,7 @@ import com.team2.flea_market.dto.comment.CommentsDto;
 import com.team2.flea_market.dto.comment.CreateOrUpdateCommentDto;
 import com.team2.flea_market.entity.Comment;
 import com.team2.flea_market.exception.CommentNotFoundException;
+import com.team2.flea_market.exception.EntityConversionException;
 import com.team2.flea_market.mapper.CommentMapper;
 import com.team2.flea_market.repository.CommentRepository;
 import com.team2.flea_market.service.CommentService;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -38,7 +40,21 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentDto createComment(Integer id, CreateOrUpdateCommentDto createOrUpdateCommentDto) {
 
-        return null;
+        return Optional.of(createOrUpdateCommentDto)
+                .map(dto -> {
+                    Comment comment = commentMapper.toEntity(dto);
+                    comment.setId(id);
+                    comment.setText(dto.text());
+                    comment.setCreatedAt(comment.getCreatedAt());
+                    commentRepository.save(comment);
+                    return commentMapper.toDto(comment);
+                })
+                .orElseThrow(() -> new EntityConversionException(
+                        "Ошибка преобразования, при попытке создать комментарий \"%s\""
+                                .formatted(createOrUpdateCommentDto.text()))
+                );
+
+
     }
 
     @Override
