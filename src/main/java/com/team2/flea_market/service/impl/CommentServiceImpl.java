@@ -6,10 +6,13 @@ import com.team2.flea_market.dto.comment.CommentsDto;
 import com.team2.flea_market.dto.comment.CreateOrUpdateCommentDto;
 import com.team2.flea_market.entity.Comment;
 import com.team2.flea_market.entity.User;
+import com.team2.flea_market.exception.AdNotFoundException;
 import com.team2.flea_market.exception.CommentNotFoundException;
 import com.team2.flea_market.exception.EntityConversionException;
 import com.team2.flea_market.mapper.CommentMapper;
+import com.team2.flea_market.repository.AdRepository;
 import com.team2.flea_market.repository.CommentRepository;
+import com.team2.flea_market.security.SecurityPermission;
 import com.team2.flea_market.service.CommentService;
 import com.team2.flea_market.service.SecurityService;
 import lombok.AllArgsConstructor;
@@ -30,6 +33,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
     private final SecurityService securityService;
+    private final AdRepository adRepository;
 
 
     @Override
@@ -50,7 +54,8 @@ public class CommentServiceImpl implements CommentService {
                 .map(dto -> {
                     Comment comment = commentMapper.toEntity(dto);
                     long currentTimeMillis = System.currentTimeMillis();
-                    comment.setId(id);
+                    comment.setAd(adRepository.findById(id)
+                            .orElseThrow(() -> new AdNotFoundException(id)));
                     comment.setText(dto.text());
                     comment.setCreatedAt(currentTimeMillis);
                     comment.setUser(currentUser);
@@ -58,32 +63,32 @@ public class CommentServiceImpl implements CommentService {
                     return commentMapper.toDto(comment);
                 })
                 .orElseThrow(() -> new EntityConversionException(
-                        "Ошибка преобразования, при попытке создать комментарий \"%s\"пользователем \\\"%s\\\"\""
+                        "Ошибка преобразования, при попытке создать комментарий \"%s\" пользователем \"%s\""
                                 .formatted(createOrUpdateCommentDto.text(), currentUser.getEmail()))
                 );
-
-
     }
 
     @Override
     @Transactional
     public void deleteAdComment(Integer adId, Integer commentId) {
+        User currentUser = securityService.getCurrentUser();
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException(commentId));
+        SecurityPermission.verifyCommentPermissions(comment, currentUser);
         commentRepository.delete(comment);
-
     }
 
     @Override
     @Transactional
     public CommentDto updateComment(Integer adId, Integer commentId, CreateOrUpdateCommentDto createOrUpdateCommentDto) {
+        User currentUser = securityService.getCurrentUser();
         return commentRepository.findById(commentId)
                 .map(comment -> {
+                    SecurityPermission.verifyCommentPermissions(comment, currentUser);
                     commentMapper.toUpdatedComment(createOrUpdateCommentDto, comment);
                     return commentRepository.save(comment);
                 })
                 .map(commentMapper::toDto)
                 .orElseThrow(() -> new CommentNotFoundException(commentId));
-
     }
 }
