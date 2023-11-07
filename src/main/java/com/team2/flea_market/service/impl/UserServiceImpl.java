@@ -71,7 +71,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Image getImage(Integer id) {
-        return securityService.getCurrentUser().getImage();
+        return userRepository.findById(id)
+                .map(User::getImage)
+                .orElseThrow();
     }
 
 }

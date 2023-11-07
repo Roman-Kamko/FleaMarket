@@ -25,7 +25,7 @@ public class WebSecurityConfig {
             "/webjars/**",
             "/login",
             "/register",
-            "/ads",
+            "/users/me/image/*",
             "/ads/*/image"
     };
 
@@ -44,8 +44,8 @@ public class WebSecurityConfig {
                 .authenticationProvider(daoAuthenticationProvider())
                 .authorizeHttpRequests(authorization ->
                         authorization
-                                .antMatchers(HttpMethod.OPTIONS).permitAll()
                                 .mvcMatchers(AUTH_WHITELIST).permitAll()
+                                .mvcMatchers(HttpMethod.GET, "/ads").permitAll()
                                 .mvcMatchers("/ads/**", "/users/**").authenticated()
                                 .mvcMatchers("/users/**").hasAnyAuthority("ADMIN", "USER")
                 )
