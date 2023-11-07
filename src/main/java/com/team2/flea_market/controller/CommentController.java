@@ -3,6 +3,7 @@ package com.team2.flea_market.controller;
 import com.team2.flea_market.dto.comment.CommentDto;
 import com.team2.flea_market.dto.comment.CommentsDto;
 import com.team2.flea_market.dto.comment.CreateOrUpdateCommentDto;
+import com.team2.flea_market.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,19 +11,22 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
 
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/ads")
 @Tag(name = "Комментарии")
+@RequiredArgsConstructor
 public class CommentController {
+
+    private final CommentService commentService;
 
     @Operation(summary = "Получение всех комментариев объявления")
     @ApiResponses(value = {
@@ -36,7 +40,7 @@ public class CommentController {
     })
     @GetMapping("/{id}/comments")
     public ResponseEntity<CommentsDto> findAllAdComments(@PathVariable @Parameter(description = "id объявления") Integer id) {
-        return ResponseEntity.ok(new CommentsDto(0, Collections.emptyList()));
+        return ResponseEntity.ok(commentService.findAllAdComments(id));
     }
 
     @Operation(summary = "Добавление комментария к объявлению")
@@ -52,7 +56,7 @@ public class CommentController {
     @PostMapping("/{id}/comments")
     public ResponseEntity<CommentDto> createComment(@PathVariable @Parameter(description = "id объявления") Integer id,
                                                     @RequestBody @Valid CreateOrUpdateCommentDto createOrUpdateCommentDto) {
-        return ResponseEntity.ok(new CommentDto(1, "", "", 1L, 1, ""));
+        return ResponseEntity.ok(commentService.createComment(id, createOrUpdateCommentDto));
     }
 
     @Operation(summary = "Удаление комментария")
@@ -69,8 +73,10 @@ public class CommentController {
     @DeleteMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<?> deleteAdComment(@PathVariable @Parameter(description = "id объявления") Integer adId,
                                              @PathVariable @Parameter(description = "id комментария") Integer commentId) {
+        commentService.deleteAdComment(adId, commentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
 
     @Operation(summary = "Обновление комментария")
     @ApiResponses(value = {
@@ -88,7 +94,6 @@ public class CommentController {
     public ResponseEntity<CommentDto> updateComment(@PathVariable @Parameter(description = "id объявления") Integer adId,
                                                     @PathVariable @Parameter(description = "id комментария") Integer commentId,
                                                     @RequestBody @Valid CreateOrUpdateCommentDto createOrUpdateCommentDto) {
-        return ResponseEntity.ok(new CommentDto(1, "", "", 1L, 1, ""));
+        return ResponseEntity.ok(commentService.updateComment(adId, commentId, createOrUpdateCommentDto));
     }
-
 }
