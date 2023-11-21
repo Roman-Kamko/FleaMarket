@@ -19,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.Collections;
 
 @RestController
@@ -44,8 +45,8 @@ public class AdController {
                     @Content(schema = @Schema(hidden = true))})
     })
     @PostMapping
-    public ResponseEntity<AdDto> createAd(@RequestPart(value = "dto") @Validated CreateOrUpdateAdDto createOrUpdateAdDto,
-                                          @RequestPart(value = "file") MultipartFile image) {
+    public ResponseEntity<AdDto> createAd(@RequestPart(value = "properties") @Valid CreateOrUpdateAdDto createOrUpdateAdDto,
+                                          @RequestPart(value = "image") MultipartFile image) {
         return ResponseEntity.status(HttpStatus.CREATED).body(new AdDto(1, "", 1, 1, ""));
     }
 
@@ -94,7 +95,7 @@ public class AdController {
     })
     @PatchMapping("/{id}")
     public ResponseEntity<AdDto> updateAd(@PathVariable @Parameter(description = "id объявления") Integer id,
-                                          @RequestBody @Validated CreateOrUpdateAdDto createOrUpdateAdDto) {
+                                          @RequestBody @Valid CreateOrUpdateAdDto createOrUpdateAdDto) {
         return ResponseEntity.ok(new AdDto(1, "", 1, 1, ""));
     }
 
@@ -129,7 +130,7 @@ public class AdController {
     * */
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> updateAdImage(@PathVariable @Parameter(description = "id объявления") Integer id,
-                                                @RequestBody MultipartFile image) {
+                                                @RequestPart MultipartFile image) {
         return ResponseEntity.ok(new byte[]{});
     }
 
