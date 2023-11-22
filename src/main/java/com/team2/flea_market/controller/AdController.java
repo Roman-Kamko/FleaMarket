@@ -44,7 +44,7 @@ public class AdController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = {
                     @Content(schema = @Schema(hidden = true))})
     })
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA)
     public ResponseEntity<AdDto> createAd(@RequestPart(value = "properties") @Valid CreateOrUpdateAdDto createOrUpdateAdDto,
                                           @RequestPart(value = "image") MultipartFile image) {
         return ResponseEntity.status(HttpStatus.CREATED).body(new AdDto(1, "", 1, 1, ""));
