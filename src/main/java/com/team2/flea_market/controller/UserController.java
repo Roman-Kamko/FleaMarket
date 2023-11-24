@@ -92,7 +92,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Not found", content = {
                     @Content(schema = @Schema(hidden = true))})
     })
-    @GetMapping(value = "/me/image/{id}", produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @GetMapping(value = "/me/image/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> getImageById(@PathVariable("id") int id) {
         Image image = userService.getImage(id);
         return ResponseEntity.ok()
