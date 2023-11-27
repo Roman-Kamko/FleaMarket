@@ -143,7 +143,7 @@ public class AdController {
     @Operation(summary = "Получить картинку объявления")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = {
-                    @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, array =
+                    @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE, array =
                     @ArraySchema(schema = @Schema(type = "string", format = "byte")))}),
             @ApiResponse(responseCode = "404", description = "Not found", content = {
                     @Content(schema = @Schema(hidden = true))})
