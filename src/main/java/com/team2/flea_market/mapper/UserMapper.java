@@ -4,10 +4,7 @@ import com.team2.flea_market.dto.auth.RegisterDto;
 import com.team2.flea_market.dto.user.UpdateUserDto;
 import com.team2.flea_market.dto.user.UserDto;
 import com.team2.flea_market.entity.User;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -35,6 +32,14 @@ public interface UserMapper {
      * @param user {@link User}
      * @return {@link UserDto}
      */
+    @Mapping(target = "image", expression = "java(getImage(user))")
     UserDto toDto(User user);
+
+    default String getImage(User user) {
+        if (user.getImage() == null) {
+            return null;
+        }
+        return "/users/me/image/" + user.getId();
+    }
 
 }

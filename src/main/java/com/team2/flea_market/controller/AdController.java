@@ -4,6 +4,8 @@ import com.team2.flea_market.dto.ad.AdDto;
 import com.team2.flea_market.dto.ad.AdsDto;
 import com.team2.flea_market.dto.ad.CreateOrUpdateAdDto;
 import com.team2.flea_market.dto.ad.ExtendedAdDto;
+import com.team2.flea_market.entity.Image;
+import com.team2.flea_market.service.AdService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -12,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +22,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.Collections;
 
+@CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/ads")
 @Tag(name = "Объявления")
+@RequiredArgsConstructor
 public class AdController {
+
+    private final AdService adService;
 
     @Operation(summary = "Получение всех объявлений")
     @ApiResponse(responseCode = "200", description = "OK", content = {
@@ -32,7 +38,7 @@ public class AdController {
             @Schema(implementation = AdsDto.class))})
     @GetMapping
     public ResponseEntity<AdsDto> findAllAds() {
-        return ResponseEntity.ok(new AdsDto(0, Collections.emptyList()));
+        return ResponseEntity.ok(adService.findAllAds());
     }
 
     @Operation(summary = "Добавление объявления")
@@ -46,7 +52,7 @@ public class AdController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AdDto> createAd(@RequestPart(value = "properties") @Valid CreateOrUpdateAdDto createOrUpdateAdDto,
                                           @RequestPart(value = "image") MultipartFile image) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(new AdDto(1, "", 1, 1, ""));
+        return ResponseEntity.status(HttpStatus.CREATED).body(adService.createAd(createOrUpdateAdDto, image));
     }
 
     @Operation(summary = "Добавление объявления")
@@ -61,7 +67,7 @@ public class AdController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<ExtendedAdDto> findAdById(@PathVariable @Parameter(description = "id объявления") Integer id) {
-        return ResponseEntity.ok(new ExtendedAdDto(1, "", "", "", "", "", "", 1, ""));
+        return ResponseEntity.ok(adService.findAdById(id));
     }
 
     @Operation(summary = "Удаление объявления")
@@ -77,6 +83,7 @@ public class AdController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAd(@PathVariable @Parameter(description = "id объявления") Integer id) {
+        adService.deleteAd(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -95,7 +102,7 @@ public class AdController {
     @PatchMapping("/{id}")
     public ResponseEntity<AdDto> updateAd(@PathVariable @Parameter(description = "id объявления") Integer id,
                                           @RequestBody @Valid CreateOrUpdateAdDto createOrUpdateAdDto) {
-        return ResponseEntity.ok(new AdDto(1, "", 1, 1, ""));
+        return ResponseEntity.ok(adService.updateAd(id, createOrUpdateAdDto));
     }
 
     @Operation(summary = "Обновление информации об объявлении")
@@ -108,7 +115,7 @@ public class AdController {
     })
     @GetMapping("/me")
     public ResponseEntity<AdsDto> findAllUserAds() {
-        return ResponseEntity.ok(new AdsDto(0, Collections.emptyList()));
+        return ResponseEntity.ok(adService.findAllUserAds());
     }
 
     @Operation(summary = "Обновление картинки объявления")
@@ -126,7 +133,28 @@ public class AdController {
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> updateAdImage(@PathVariable @Parameter(description = "id объявления") Integer id,
                                                 @RequestPart MultipartFile image) {
-        return ResponseEntity.ok(new byte[]{});
+        Image imageFile = adService.updateAdImage(id, image);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentLength(imageFile.getSize())
+                .contentType(MediaType.valueOf(imageFile.getMediaType()))
+                .body(imageFile.getContent());
+    }
+
+    @Operation(summary = "Получить картинку объявления")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {
+                    @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE, array =
+                    @ArraySchema(schema = @Schema(type = "string", format = "byte")))}),
+            @ApiResponse(responseCode = "404", description = "Not found", content = {
+                    @Content(schema = @Schema(hidden = true))})
+    })
+    @GetMapping(value = "/{id}/image", produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<byte[]> getAdImage(@PathVariable Integer id) {
+        Image image = adService.getAdImage(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentLength(image.getSize())
+                .contentType(MediaType.valueOf(image.getMediaType()))
+                .body(image.getContent());
     }
 
 }
