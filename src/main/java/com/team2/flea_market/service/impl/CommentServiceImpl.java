@@ -34,6 +34,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
     private final SecurityService securityService;
     private final AdRepository adRepository;
+    private final SecurityPermission permission;
 
 
     @Override
@@ -74,7 +75,7 @@ public class CommentServiceImpl implements CommentService {
         User currentUser = securityService.getCurrentUser();
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException(commentId));
-        SecurityPermission.verifyCommentPermissions(comment, currentUser);
+        permission.verifyCommentPermissions(comment, currentUser);
         commentRepository.delete(comment);
     }
 
@@ -84,7 +85,7 @@ public class CommentServiceImpl implements CommentService {
         User currentUser = securityService.getCurrentUser();
         return commentRepository.findById(commentId)
                 .map(comment -> {
-                    SecurityPermission.verifyCommentPermissions(comment, currentUser);
+                    permission.verifyCommentPermissions(comment, currentUser);
                     commentMapper.toUpdatedComment(createOrUpdateCommentDto, comment);
                     return commentRepository.save(comment);
                 })

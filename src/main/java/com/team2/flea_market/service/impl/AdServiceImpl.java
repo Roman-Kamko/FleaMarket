@@ -34,6 +34,7 @@ public class AdServiceImpl implements AdService {
     private final AdMapper adMapper;
     private final ImageService imageService;
     private final SecurityService securityService;
+    private final SecurityPermission permission;
 
     @Override
     public AdsDto findAllAds() {
@@ -120,7 +121,7 @@ public class AdServiceImpl implements AdService {
         User currentUser = securityService.getCurrentUser();
         Ad currentAd = adRepository.findById(adId)
                 .orElseThrow(() -> new AdNotFoundException(adId));
-        SecurityPermission.verifyAdPermissions(currentAd, currentUser);
+        permission.verifyAdPermissions(currentAd, currentUser);
     }
 
 }
